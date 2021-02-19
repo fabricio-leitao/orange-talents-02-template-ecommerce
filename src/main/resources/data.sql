@@ -1,0 +1,1 @@
+INSERT INTO usuario(id, email, senha, data_criacao) values (1l, 'maurice@gmail.com', '$2a$10$dxPsk06lN3rI4QA6HbHub.vkavYivy/nRRoWHVHZ5KXcoiMP9LFHq', NOW());
