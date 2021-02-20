@@ -1,5 +1,6 @@
 package br.com.zup.mercadolivre.model;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 import javax.persistence.Entity;
@@ -16,8 +17,9 @@ import org.hibernate.validator.constraints.Length;
 import br.com.zup.mercadolivre.controller.util.SenhaConverter;
 
 @Entity
-public class Usuario {
-
+public class Usuario implements Serializable {
+	private static final long serialVersionUID = 1L;
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -42,7 +44,7 @@ public class Usuario {
 
 	@Override
 	public String toString() {
-		return "Usuario [id=" + id + ", email=" + email + ", senha=" + senha + ", dataCriacao=" + dataCriacao + "]";
+		return "Usuario [id=" + id + ", email=" + email +  ", dataCriacao=" + dataCriacao + "]";
 	}
 
 	public String getEmail() {
@@ -96,7 +98,7 @@ public class Usuario {
 		return true;
 	}
 
-	public Object getId() {
+	public Long getId() {
 		return this.id;
 	}
 

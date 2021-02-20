@@ -1,4 +1,4 @@
-package br.com.zup.mercadolivre.config;
+package br.com.zup.mercadolivre.repository;
 
 import java.util.Optional;
 
@@ -8,7 +8,7 @@ import br.com.zup.mercadolivre.model.Usuario;
 
 public interface UsuarioRepository extends CrudRepository<Usuario, Long>{
 
-	Optional<Usuario> findByEmail(String username);
+	Optional<Usuario> findByEmail(String email);
 
 	Usuario findByEmail(Long idUsuario);
 

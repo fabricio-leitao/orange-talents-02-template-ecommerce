@@ -13,6 +13,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import br.com.zup.mercadolivre.model.Usuario;
+import br.com.zup.mercadolivre.repository.UsuarioRepository;
 
 public class AutenticacaoViaTokenFilter extends OncePerRequestFilter{
 	
