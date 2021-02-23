@@ -4,16 +4,19 @@ import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -23,6 +26,7 @@ import javax.validation.constraints.Size;
 import org.hibernate.validator.constraints.Length;
 
 import br.com.zup.mercadolivre.controller.request.NovaCaracteristicaRequest;
+import br.com.zup.mercadolivre.controller.util.Opinioes;
 
 @Entity
 public class Produto {
@@ -41,8 +45,18 @@ public class Produto {
 	@ManyToOne
 	private @NotNull @Valid Usuario usuario;
 	
-	@OneToMany(mappedBy = "produto", cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "produto", cascade = CascadeType.PERSIST)
 	private Set<Caracteristica> caracteristicas = new HashSet<>();
+	
+	@OneToMany(mappedBy = "produto", cascade = CascadeType.MERGE)
+	private Set<Imagem> imagens = new HashSet<>();
+	
+	@OneToMany(mappedBy = "produto")
+	@OrderBy("titulo asc")
+	private SortedSet<Pergunta> perguntas = new TreeSet<>();
+	
+	@OneToMany(mappedBy = "produto")
+	private Set<Opiniao> opinioes = new HashSet<>();
 
 	@Deprecated
 	public Produto() {
@@ -126,7 +140,50 @@ public class Produto {
 	public String toString() {
 		return "Produto [id=" + id + ", nome=" + nome + ", valor=" + valor + ", quantidade=" + quantidade
 				+ ", descricao=" + descricao + ", categoria=" + categoria + ", usuario=" + usuario
-				+ ", caracteristicas=" + caracteristicas + "]";
+				+ ", caracteristicas=" + caracteristicas + ", imagens=" + imagens + "]";
 	}
+
+	public boolean pertenceUsuario(Usuario usuario) {
+		return this.usuario.equals(usuario);
+	}
+
+	public void associaUriImagens(Set<String> links) {
+		Set<Imagem> imagens = links.stream().map(link -> new Imagem(this, link)).collect(Collectors.toSet());
+		
+		this.imagens.addAll(imagens);
+	}
+
+	public String getNome() {
+		return nome;
+	}
+
+	public BigDecimal getValor() {
+		return valor;
+	}
+
+	public String getDescricao() {
+		return descricao;
+	}
+
+	public Set<Caracteristica> getCaracteristicas() {
+		return caracteristicas;
+	}
+
+	public <T> Set<T> mapeiaCaracteristicas(Function<Caracteristica, T> funcaoMap) {
+		return this.caracteristicas.stream().map(funcaoMap).collect(Collectors.toSet());
+	}
+
+	public <T> Set<T> mapeiaImagens(Function<Imagem, T> funcaoMap) {
+		return this.imagens.stream().map(funcaoMap).collect(Collectors.toSet());
+	}
+
+	public <T extends Comparable<T>> SortedSet<T> mapeiaPerguntas(Function<Pergunta, T> funcaoMap) {
+		return this.perguntas.stream().map(funcaoMap).collect(Collectors.toCollection(TreeSet :: new));
+	}
+
+	public Opinioes getOpinioes() {
+		return new Opinioes(this.opinioes);
+	}
+
 
 }

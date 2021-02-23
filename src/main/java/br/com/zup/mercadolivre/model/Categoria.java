@@ -16,6 +16,7 @@ public class Categoria {
 	private @NotBlank String nome;
 	@ManyToOne
 	private Categoria categoria;
+	
 
 	@Deprecated
 	public Categoria() {
@@ -55,14 +56,17 @@ public class Categoria {
 			return false;
 		return true;
 	}
+	
+	
+
+	public void setCategoria(Categoria categoria) {
+		this.categoria = categoria;
+	}
 
 	public Categoria(@NotBlank String nome) {
 		this.nome = nome;
 	}
 
-	public void setCategoria(Categoria categoria) {
-		this.categoria = categoria;
-	}
 
 	@Override
 	public String toString() {
