@@ -24,6 +24,7 @@ import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.Length;
+import org.springframework.util.Assert;
 
 import br.com.zup.mercadolivre.controller.request.NovaCaracteristicaRequest;
 import br.com.zup.mercadolivre.controller.util.Opinioes;
@@ -36,7 +37,7 @@ public class Produto {
 	private Long id;
 	private @NotBlank String nome;
 	private @NotNull @Positive BigDecimal valor;
-	private @NotNull @Positive Integer quantidade;
+	private @NotNull Integer quantidade;
 	private @NotBlank @Length(max = 1000) String descricao;
 	
 	@ManyToOne
@@ -186,4 +187,14 @@ public class Produto {
 	}
 
 
+	public boolean abateEstoque(@Positive int quantidade) {
+		Assert.isTrue(quantidade > 0, "Quantidade deve ser maior que 0");
+		
+		if(quantidade <= this.quantidade) {
+			this.quantidade -= quantidade;
+			return true;
+			
+		}
+		return false;
+	}
 }
